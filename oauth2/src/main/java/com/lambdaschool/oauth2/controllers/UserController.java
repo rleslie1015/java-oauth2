@@ -2,6 +2,8 @@ package com.lambdaschool.oauth2.controllers;
 
 import com.lambdaschool.oauth2.models.User;
 import com.lambdaschool.oauth2.services.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -24,12 +26,18 @@ public class UserController
     @Autowired
     private UserService userService;
 
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+
     // http://localhost:2019/users/users/
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping(value = "/users",
                 produces = {"application/json"})
-    public ResponseEntity<?> listAllUsers()
+    public ResponseEntity<?> listAllUsers(HttpServletRequest request)
     {
+        logger.warn("This is a log");
+        logger.trace("This is another log");
+        logger.info(request.getMethod() + " " + request.getRequestURI());
+
         List<User> myUsers = userService.findAll();
         return new ResponseEntity<>(myUsers,
                                     HttpStatus.OK);
