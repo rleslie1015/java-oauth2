@@ -1,5 +1,7 @@
 package com.lambdaschool.oauth2.services;
 
+import com.lambdaschool.oauth2.exceptions.ResourceFoundException;
+import com.lambdaschool.oauth2.exceptions.ResourceNotFoundException;
 import com.lambdaschool.oauth2.models.Role;
 import com.lambdaschool.oauth2.models.User;
 import com.lambdaschool.oauth2.models.UserRoles;
@@ -94,7 +96,7 @@ public class UserServiceImpl implements UserDetailsService,
     {
         if (userrepos.findByUsername(user.getUsername().toLowerCase()) != null)
         {
-            throw new EntityNotFoundException(user.getUsername() + " is already taken!");
+            throw new ResourceFoundException(user.getUsername() + " is already taken!");
         }
 
         User newUser = new User();
@@ -108,7 +110,7 @@ public class UserServiceImpl implements UserDetailsService,
             long id = ur.getRole()
                         .getRoleid();
             Role role = rolerepos.findById(id)
-                                 .orElseThrow(() -> new EntityNotFoundException("Role id " + id + " not found!"));
+                                 .orElseThrow(() -> new ResourceNotFoundException("Role id " + id + " not found!"));
             newRoles.add(new UserRoles(newUser,
                                        ur.getRole()));
         }
